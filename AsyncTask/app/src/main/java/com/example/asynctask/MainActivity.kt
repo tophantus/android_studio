@@ -28,15 +28,13 @@ import androidx.compose.ui.unit.dp
 import com.example.asynctask.ui.theme.AsyncTaskTheme
 
 class MainActivity : ComponentActivity() {
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             AsyncTaskTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) {
-                    MyApp()
-                }
+                MyApp()
+
             }
         }
     }
@@ -45,8 +43,8 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyApp() {
-    var text1 by remember { mutableStateOf("Nhấn nút để bắt đầu công việc nền 1") }
-    var text2 by remember { mutableStateOf("Nhấn nút để bắt đầu công việc nền 2") }
+    var text1 by remember { mutableStateOf("Chưa bắt đầu công việc nền 1") }
+    var text2 by remember { mutableStateOf("Chưa bắt đầu công việc nền 2") }
 
     Scaffold(
         topBar = {
@@ -64,25 +62,24 @@ fun MyApp() {
                 Text(text1)
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = {
-                    DownloadTask { result ->
+                    Task1 { result ->
                         text1 = result
                     }.execute()
                 }) {
                     Text("Bắt đầu công việc nền 1")
                 }
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Text(text2)
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(text1)
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = {
-                        DownloadTask { result ->
-                            text2 = result
-                        }.execute()
-                    }
-                ) {
+                Button(onClick = {
+                    Task2 { result ->
+                        text2 = result
+                    }.execute()
+                }) {
                     Text("Bắt đầu công việc nền 2")
                 }
-
             }
         }
     )
