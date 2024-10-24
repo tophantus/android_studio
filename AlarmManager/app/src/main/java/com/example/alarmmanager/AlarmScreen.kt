@@ -19,6 +19,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+
+
+
 @Composable
 fun AlarmScreen(context: Context) {
 
@@ -29,7 +32,8 @@ fun AlarmScreen(context: Context) {
     ) {
         Button(onClick = {
             //setExactAlarm(context, 5000)
-            setElapsedRealtimeAlarm(context)
+            //setElapsedRealtimeAlarm(context)
+            setAlarmClock(context)
         }) {
             Text(text = "Set Alarm")
         }
@@ -94,9 +98,22 @@ fun setElapsedRealtimeAlarm(context: Context) {
         context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
 
-    val triggerAtMillis = SystemClock.elapsedRealtime() + 10000
-    alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtMillis, pendingIntent)
+    val triggerAtMillis = System.currentTimeMillis() + 10000
+    val alarmClockInfo = AlarmManager.AlarmClockInfo(triggerAtMillis, pendingIntent)
+    alarmManager.setAlarmClock(alarmClockInfo, pendingIntent)
     Toast.makeText(context, "Alarm set for 5 seconds from now", Toast.LENGTH_SHORT).show()
+}
+
+fun setAlarmClock(context: Context) {
+    val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    val intent = Intent(context, AlarmReceiver::class.java)
+    val pendingIntent = PendingIntent.getBroadcast(
+        context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    )
+
+    val triggerAtMillis = System.currentTimeMillis() + 5000 // Kích hoạt sau 5 giây
+    val alarmClockInfo = AlarmManager.AlarmClockInfo(triggerAtMillis, pendingIntent)
+    alarmManager.setAlarmClock(alarmClockInfo, pendingIntent)
 }
 
 fun cancelAlarm(context: Context) {
@@ -115,7 +132,6 @@ fun isAlarmPendingIntent(context: Context): Boolean {
     )
     return pendingIntent != null
 }
-
 
 
 
